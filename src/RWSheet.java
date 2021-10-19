@@ -30,12 +30,14 @@ public class RWSheet {
 			// Initialize client. Gets API access token from SMARTSHEET_ACCESS_TOKEN variable
 			// Token is set as environment variable in Eclipse settings
 			Smartsheet smartsheet = SmartsheetFactory.createDefaultClient();
+			
+			ArrayList<Timekeeper> users = new ArrayList<Timekeeper>();
 
 			//Sheet sheet = smartsheet.sheetResources().importXlsx("Sample Sheet.xlsx", "sample", 0, 0);
 			PagedResult<Sheet> sheets2 = smartsheet.sheetResources().listSheets(null, null, null);
 			
 			//change string to the id of the sheet you want to read
-			long id = Long.parseLong("4187144668374916");
+			long id = Long.parseLong("5648606075086724");
 			Sheet reminder = smartsheet.sheetResources().getSheet(id, null, null, null, null, null, null, null, null, null);
 			
 			// put the columns in a hashmap for easy acesss
@@ -58,14 +60,46 @@ public class RWSheet {
 					if(val != null && val.equals("In Progress")) {
 						System.out.println(r.getId());
 						re.add(r);
-						break;
+						
+						Cell periodCell = getCellByColumnName(r, "Reminder Frequency");
+						double period = (Double) periodCell.getValue();
+						
+						Cell startCell = getCellByColumnName(r, "Assigned On");
+						String startStr = (String) startCell.getValue();
+						LocalDate start = LocalDate.parse(startStr);
+						
+						Cell categoryCell = getCellByColumnName(r, "Category");
+						String category = (String) categoryCell.getValue();
+						
+						Cell itemCell = getCellByColumnName(r, "Follow-Up Item");
+						String item = (String) itemCell.getValue();
+						
+						Cell assignedToCell = getCellByColumnName(r, "Assigned To");
+						String assignedTo = (String) assignedToCell.getValue();
+						
+						Timekeeper current = new Timekeeper(period, start, category, item, assignedTo, "In Progress");
+						
+						users.add(current);
+						
+						
+//						break;
 						//Cell cell2 = getCellByColumnName(r, "Assigned To");
 						
 					}
+					
 				//}
 			}
 			
-			sendEmail.reminder("fullra01@gettysburg.edu", re, id);
+			updateAllTimekeepers(users);
+			
+//			String date = "2021-10-14";
+//			LocalDate test = LocalDate.parse(date);
+//			
+//			Timekeeper tk = new Timekeeper(5, test, "Hello", "item", "assignedTo", "status");
+//			
+//			System.out.print(tk.checkTime());
+			
+			sendEmail.reminder("dundno01@gettysburg.edu", re, id);
 			
 			//smartsheet.sheetResources().rowResources().updateRows(id, re);
 			
@@ -114,6 +148,13 @@ public class RWSheet {
 
 	}
 
+	public static void updateAllTimekeepers(ArrayList<Timekeeper> al) {
+		for (Timekeeper tk : al) {
+			boolean check = tk.checkTime();
+			System.out.println(check);
+		}
+	}
+	
 	/*
 	 * TODO: Replace the body of this loop with your code
 	 * This *example* looks for rows with a "Status" column marked "Complete" and sets the "Remaining" column to zero
