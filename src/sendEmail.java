@@ -53,4 +53,8 @@ public class sendEmail {
 		
 		return true;
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> d42fc762f9dc376a872d89fd67c6071f8edc04f8

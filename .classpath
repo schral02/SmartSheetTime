@@ -17,6 +17,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="/Users/alexschraft/eclipse-workspace/SmartSheetTime/slf4j-simple-1.7.32.jar"/>
+=======
+	<classpathentry kind="lib" path="slf4j-simple-1.7.32.jar"/>
+>>>>>>> d42fc762f9dc376a872d89fd67c6071f8edc04f8
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
